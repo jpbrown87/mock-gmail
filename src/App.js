@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import InboxView from "./components/InboxView";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      emails: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:3001/emails")
+      .then((response) => response.json())
+      .then((data) => this.setState({ emails: data }));
+  }
+
+  render() {
+    return (
+      <div>
+        <header>
+          <h4>GeeMail</h4>
+          <input id="search-bar" type="text" placeholder="Search..." />
+          <a href="http://localhost:3001/search">
+            <button id="search-buttton">Search</button>
+          </a>
+        </header>
+
+        <body>
+          <InboxView emails={this.state.emails} />
+        </body>
+      </div>
+    );
+  }
 }
 
 export default App;
